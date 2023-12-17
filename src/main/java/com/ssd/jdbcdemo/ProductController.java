@@ -1,6 +1,8 @@
 package com.ssd.jdbcdemo;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,12 +14,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class ProductController {
+    private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 
     @Autowired
     ProductRepository productRepository;
 
     @GetMapping("/products")
     public ResponseEntity<List<Product>> getAllProducts() {
+        logger.info("=====>>>>> Executing getAllProducts.");
         List<Product> products = new ArrayList<>();
         products = productRepository.findAll();
 
@@ -29,21 +33,31 @@ public class ProductController {
 
     @GetMapping("/products/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable("id") int id) {
-        Product product = productRepository.findById(id);
-        if(null == product) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        logger.info("=====>>>>> Executing getProductById.");
+        try {
+            Product product = productRepository.findById(id);
+            if (null == product) {
+                logger.error("=====>>>>> No products found for id " + id);
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            return new ResponseEntity<>(product, HttpStatus.OK);
+        } catch(Exception e) {
+            logger.error("=====>>>>> Exception caught. " + e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(product,HttpStatus.OK);
     }
 
     @PostMapping("/products")
     public ResponseEntity<String> createProduct(@RequestBody Product product) {
+        logger.info("=====>>>>> Executing createProduct.");
         productRepository.save(new Product(product.getId(),product.getName(),product.getPrice(),product.getQuantity()));
         return new ResponseEntity<>("Product saved successfully!",HttpStatus.CREATED);
     }
 
     @PutMapping("/products/{id}")
     public ResponseEntity<String> updateProduct(@PathVariable("id") int id, @RequestBody Product product) {
+        logger.info("=====>>>>> Executing updateProduct.");
         Product updatedProduct = productRepository.findById(id);
         if (null != updatedProduct) {
             updatedProduct.setPrice(product.getPrice());
@@ -57,6 +71,7 @@ public class ProductController {
 
     @DeleteMapping("/products/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable("id") int id) {
+        logger.info("=====>>>>> Executing deleteProduct.");
         int status = productRepository.deleteById(id);
         if (status == 0) {
             return new ResponseEntity<>("Cannot find product",HttpStatus.NOT_FOUND);
@@ -66,6 +81,7 @@ public class ProductController {
 
     @GetMapping("/product/{name}")
     public ResponseEntity<List<Product>> findProductByName(@PathVariable("name") String name) {
+        logger.info("=====>>>>> Executing findProductByName.");
         List<Product> products = new ArrayList<>();
         products = productRepository.findByName(name);
         if(products.isEmpty()) {

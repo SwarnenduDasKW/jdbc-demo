@@ -34,7 +34,8 @@ public class JdbcProductRepository implements ProductRepository {
 
     @Override
     public int deleteById(int id) {
-        return 0;
+        int status = jdbcTemplate.update("DELETE FROM product where id=?",id);
+        return status;
     }
 
     @Override
