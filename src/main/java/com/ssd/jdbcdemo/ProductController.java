@@ -43,7 +43,7 @@ public class ProductController {
 
             return new ResponseEntity<>(product, HttpStatus.OK);
         } catch(Exception e) {
-            logger.error("=====>>>>> Exception caught. " + e.getMessage());
+            logger.error("=====>>>>> Exception caught in getProductById. " + e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -51,20 +51,31 @@ public class ProductController {
     @PostMapping("/products")
     public ResponseEntity<String> createProduct(@RequestBody Product product) {
         logger.info("=====>>>>> Executing createProduct.");
-        productRepository.save(new Product(product.getId(),product.getName(),product.getPrice(),product.getQuantity()));
+        try {
+            productRepository.save(new Product(product.getId(), product.getName(), product.getPrice(), product.getQuantity()));
+        }
+        catch(Exception e) {
+            logger.error("=====>>>>> Exception caught in createProduct. " + e.getMessage());
+            return new ResponseEntity<>("Product saved successfully!",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
         return new ResponseEntity<>("Product saved successfully!",HttpStatus.CREATED);
     }
 
     @PutMapping("/products/{id}")
     public ResponseEntity<String> updateProduct(@PathVariable("id") int id, @RequestBody Product product) {
         logger.info("=====>>>>> Executing updateProduct.");
-        Product updatedProduct = productRepository.findById(id);
-        if (null != updatedProduct) {
-            updatedProduct.setPrice(product.getPrice());
-            updatedProduct.setQuantity(product.getQuantity());
+        try {
+            Product updatedProduct = productRepository.findById(id);
+            if (null != updatedProduct) {
+                updatedProduct.setPrice(product.getPrice());
+                updatedProduct.setQuantity(product.getQuantity());
 
-            productRepository.update(product);
-            return new ResponseEntity<>("Product updated successfully!",HttpStatus.OK);
+                productRepository.update(product);
+                return new ResponseEntity<>("Product updated successfully!", HttpStatus.OK);
+            }
+        } catch(Exception e) {
+            return new ResponseEntity<>("Exception caught in updateProduct. " + id, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>("Cannot find product with id " + id, HttpStatus.NOT_FOUND);
     }
