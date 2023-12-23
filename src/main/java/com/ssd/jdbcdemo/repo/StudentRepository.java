@@ -1,4 +1,6 @@
-package com.ssd.jdbcdemo;
+package com.ssd.jdbcdemo.repo;
+
+import com.ssd.jdbcdemo.entity.Student;
 
 import java.util.List;
 public interface StudentRepository {
