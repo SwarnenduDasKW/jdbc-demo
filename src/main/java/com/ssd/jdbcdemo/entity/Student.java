@@ -1,4 +1,4 @@
-package com.ssd.jdbcdemo;
+package com.ssd.jdbcdemo.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

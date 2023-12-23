@@ -1,4 +1,4 @@
-package com.ssd.jdbcdemo;
+package com.ssd.jdbcdemo.entity;
 
 public class Product {
     private long id;

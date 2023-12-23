@@ -1,4 +1,6 @@
-package com.ssd.jdbcdemo;
+package com.ssd.jdbcdemo.repo;
+
+import com.ssd.jdbcdemo.entity.Product;
 
 import java.util.List;
 

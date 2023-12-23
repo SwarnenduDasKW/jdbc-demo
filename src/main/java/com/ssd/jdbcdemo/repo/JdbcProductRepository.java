@@ -1,5 +1,6 @@
-package com.ssd.jdbcdemo;
+package com.ssd.jdbcdemo.repo;
 
+import com.ssd.jdbcdemo.entity.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;

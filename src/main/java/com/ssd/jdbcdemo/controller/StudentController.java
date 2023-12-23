@@ -1,5 +1,8 @@
-package com.ssd.jdbcdemo;
+package com.ssd.jdbcdemo.controller;
 
+import com.ssd.jdbcdemo.controller.ProductController;
+import com.ssd.jdbcdemo.entity.Student;
+import com.ssd.jdbcdemo.repo.StudentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
